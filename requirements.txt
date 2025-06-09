@@ -1,3 +1,4 @@
 matplotlib
 scikit-learn
+pip==25.1.1
 statsmodel
