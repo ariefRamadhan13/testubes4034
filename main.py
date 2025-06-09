@@ -5,12 +5,14 @@ import Tes2  # Mengimpor aplikasi ARIMA dari Tes2.py
 import Tes3
 import Tes4
 from PIL import Image
+import cv2
 
+img = Image.open("erik.png")
+st.image(img,width = 1000)
 
 def main():
     # Judul aplikasi utama
     st.title("Prediksi Harga Minyak, Downhole dan Litologi")
-    st.image("erik.png")
     
     # Pilihan aplikasi yang ingin dijalankan
     app_choice = st.selectbox("Pilih Aplikasi", ["Prediksi Harga Minyak (ARIMA Model)", "Prediksi Harga Minyak (LSTM Model)", "Analisis Downhole", "Lithology Prediction"])
