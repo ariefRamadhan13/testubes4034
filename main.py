@@ -5,7 +5,6 @@ import Tes2  # Mengimpor aplikasi ARIMA dari Tes2.py
 import Tes3
 import Tes4
 from PIL import Image
-import cv2
 
 img = Image.open("erik.png")
 st.image(img,width = 1000)
