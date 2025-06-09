@@ -7,7 +7,7 @@ import Tes4
 from PIL import Image
 
 img = Image.open("erik.png")
-st.image(img,width = 1000)
+st.image(img,width = 1500)
 
 def main():
     # Judul aplikasi utama
