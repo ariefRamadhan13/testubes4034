@@ -2,6 +2,7 @@ streamlit
 pandas
 matplotlib
 scikit-learn
+sklearn
 numpy
 statsmodels
 seaborn
