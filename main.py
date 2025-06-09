@@ -4,11 +4,13 @@ import Tes1  # Mengimpor aplikasi Downhole dari Downhole1.py
 import Tes2  # Mengimpor aplikasi ARIMA dari Tes2.py
 import Tes3
 import Tes4
+from PIL import Image
 
 
 def main():
     # Judul aplikasi utama
-    st.title("Prediksi Produksi Minyak dan Parameter Reservoir")
+    st.title("Prediksi Harga Minyak, Downhole dan Litologi")
+    st.image("erik.png")
     
     # Pilihan aplikasi yang ingin dijalankan
     app_choice = st.selectbox("Pilih Aplikasi", ["Prediksi Harga Minyak (ARIMA Model)", "Prediksi Harga Minyak (LSTM Model)", "Analisis Downhole", "Lithology Prediction"])
