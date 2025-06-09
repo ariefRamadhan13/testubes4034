@@ -5,3 +5,4 @@ seaborn
 missingno 
 openpyxl
 tensorflow
+xlsxwriter
