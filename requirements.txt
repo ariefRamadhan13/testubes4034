@@ -7,3 +7,4 @@ openpyxl
 numpy
 missingno
 seaborn
+tensorflow==2.11.0
