@@ -6,6 +6,7 @@ from sklearn.metrics import mean_absolute_error, r2_score
 
 def downhole_app():
     # Fungsi untuk memuat dan memproses data
+    st.title("Prediksi Tekanan dan Temperatur Downhole dari Surface Data")
     def load_and_process_data(uploaded_file):
         # Memuat data dari file Excel
         data = pd.read_excel(uploaded_file, sheet_name='Master Data')

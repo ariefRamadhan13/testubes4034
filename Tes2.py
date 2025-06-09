@@ -1,13 +1,13 @@
-def arima_app():
-    import pandas as pd
-    import numpy as np
-    import matplotlib.pyplot as plt
-    import streamlit as st
-    from statsmodels.tsa.arima.model import ARIMA
-    from sklearn.metrics import mean_absolute_error, mean_squared_error
-    from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import streamlit as st
+from statsmodels.tsa.arima.model import ARIMA
+from sklearn.metrics import mean_absolute_error, mean_squared_error
+from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
+from io import BytesIO
 
-    # Menambahkan judul aplikasi
+def arima_app():
     st.title("Prediksi Harga Minyak Menggunakan ARIMA dengan Grid Search")
 
     # Upload file Excel
@@ -53,6 +53,10 @@ def arima_app():
         p_max = st.number_input("Masukkan nilai maksimum untuk p (AR) yang akan diuji:", min_value=1, max_value=5, value=3)
         d_max = st.number_input("Masukkan nilai maksimum untuk d (Differencing) yang akan diuji:", min_value=0, max_value=2, value=1)
         q_max = st.number_input("Masukkan nilai maksimum untuk q (MA) yang akan diuji:", min_value=1, max_value=5, value=3)
+        forecast_steps = st.number_input("Masukkan jumlah langkah prediksi (forecast steps):", min_value=1, max_value=100, value=6)
+
+        # Tombol Apply
+        apply_button = st.button("Apply ARIMA Model")
 
         # Fungsi untuk mencari parameter terbaik (p, d, q) menggunakan Grid Search
         def grid_search_arima(data, p_values, d_values, q_values):
@@ -81,41 +85,58 @@ def arima_app():
 
             return best_order, best_model
 
-        # Mencari nilai terbaik untuk p, d, q menggunakan Grid Search
-        p_values = range(0, p_max + 1)  # Uji p dari 0 sampai p_max
-        d_values = range(0, d_max + 1)  # Uji d dari 0 sampai d_max
-        q_values = range(0, q_max + 1)  # Uji q dari 0 sampai q_max
+        if apply_button:
+            # Mencari nilai terbaik untuk p, d, q menggunakan Grid Search
+            p_values = range(0, p_max + 1)  # Uji p dari 0 sampai p_max
+            d_values = range(0, d_max + 1)  # Uji d dari 0 sampai d_max
+            q_values = range(0, q_max + 1)  # Uji q dari 0 sampai q_max
 
-        best_order, best_model = grid_search_arima(data['Price'], p_values, d_values, q_values)
+            best_order, best_model = grid_search_arima(data['Price'], p_values, d_values, q_values)
 
-        # Menampilkan hasil model terbaik
-        st.write(f"Best ARIMA Model Order: {best_order}")
-        st.write(f"Best Model AIC: {best_model.aic}")
+            # Menampilkan hasil model terbaik
+            st.write(f"Best ARIMA Model Order: {best_order}")
+            st.write(f"Best Model AIC: {best_model.aic}")
 
-        # Input untuk jumlah langkah prediksi (forecast steps) oleh pengguna
-        forecast_steps = st.number_input("Masukkan jumlah langkah prediksi (forecast steps):", min_value=1, max_value=12, value=6)
+            # Input untuk jumlah langkah prediksi (forecast steps) oleh pengguna
+            
 
-        # Membuat prediksi untuk data masa depan
-        forecast = best_model.forecast(steps=forecast_steps)
+            # Membuat prediksi untuk data masa depan
+            forecast = best_model.forecast(steps=forecast_steps)
 
-        # Tampilkan hasil prediksi
-        st.write(f'Prediksi Harga Minyak untuk {forecast_steps} hari ke depan:')
-        st.write(forecast)
+            # Tampilkan hasil prediksi
+            st.write(f'Prediksi Harga Minyak untuk {forecast_steps} hari ke depan:')
+            st.write(forecast)
 
-        # Membuat plot untuk hasil prediksi
-        st.write("Plot hasil prediksi harga minyak:")
-        plt.figure(figsize=(10, 6))
-        plt.plot(data.index, data['Price'], label='Harga Minyak Asli', color='blue')
-        plt.plot(pd.date_range(data.index[-1], periods=forecast_steps+1, freq='M')[1:], forecast, label='Prediksi Harga Minyak', color='red')
-        plt.title('Prediksi Harga Minyak Menggunakan ARIMA')
-        plt.xlabel('Tanggal')
-        plt.ylabel('Harga (USD)')
-        plt.legend()
-        st.pyplot(plt)
+            # Membuat plot untuk hasil prediksi
+            st.write("Plot hasil prediksi harga minyak:")
+            plt.figure(figsize=(10, 6))
+            plt.plot(data.index, data['Price'], label='Harga Minyak Asli', color='blue')
+            plt.plot(pd.date_range(data.index[-1], periods=forecast_steps+1, freq='D')[1:], forecast, label='Prediksi Harga Minyak', color='red')
+            plt.title('Prediksi Harga Minyak Menggunakan ARIMA')
+            plt.xlabel('Tanggal')
+            plt.ylabel('Harga (USD)')
+            plt.legend()
+            st.pyplot(plt)
 
-        # Menghitung dan menampilkan error evaluasi model
-        y_true = data['Price'].tail(forecast_steps)  # Ambil data terakhir untuk evaluasi
-        mae = mean_absolute_error(y_true, forecast)
-        rmse = np.sqrt(mean_squared_error(y_true, forecast))
-        st.write(f'Mean Absolute Error (MAE): {mae}')
-        st.write(f'Root Mean Squared Error (RMSE): {rmse}')
+            # Menghitung dan menampilkan error evaluasi model
+            y_true = data['Price'].tail(forecast_steps)  # Ambil data terakhir untuk evaluasi
+            mae = mean_absolute_error(y_true, forecast)
+            rmse = np.sqrt(mean_squared_error(y_true, forecast))
+            st.write(f'Mean Absolute Error (MAE): {mae}')
+            st.write(f'Root Mean Squared Error (RMSE): {rmse}')
+
+            # Menyimpan hasil prediksi dalam DataFrame
+            forecast_dates = pd.date_range(data.index[-1], periods=forecast_steps+1, freq='D')[1:]
+            forecast_df = pd.DataFrame({
+                'Tanggal Prediksi': forecast_dates,
+                'ARIMA Price': forecast
+            })
+
+            # Menyediakan tombol download untuk file hasil prediksi
+            csv = forecast_df.to_csv(index=False)
+            st.download_button(
+                label="Unduh Prediksi Harga Minyak",
+                data=csv,
+                file_name="prediksi_harga_minyak.csv",
+                mime="text/csv"
+            )
