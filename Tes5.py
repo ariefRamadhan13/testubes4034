@@ -85,7 +85,7 @@ def RNN_app():
         train_data = data[:length_train].iloc[:, :2]
         validation_data = data[length_train:].iloc[:, :2]
 
-        dataset_train = train_data.Price.values
+        dataset_train = train_data['Price'].values
         dataset_train = np.reshape(dataset_train, (-1, 1))
 
         # Normalize dataset
