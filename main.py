@@ -15,7 +15,7 @@ def main():
     st.title("Prediksi Harga Minyak, Downhole dan Litologi")
     
     # Pilihan aplikasi yang ingin dijalankan
-    app_choice = st.selectbox("Pilih Aplikasi", ["Prediksi Harga Minyak (ARIMA Model)", "Prediksi Harga Minyak (LSTM Model)","Prediksi Harga Minyak (RNN Model)", "Analisis Downhole", "Lithology Prediction"])
+    app_choice = st.selectbox("Pilih Aplikasi", ["Prediksi Harga Minyak (ARIMA Model)", "Prediksi Harga Minyak (LSTM Model)","Prediksi Harga Minyak (RNN Model)", "Analisis Downhole P&T (RF)", "Prediksi Litologi (RF)"])
     
     if app_choice == "Prediksi Harga Minyak (ARIMA Model)":
         # Menjalankan aplikasi ARIMA dari Tes2.py
@@ -26,10 +26,10 @@ def main():
     elif app_choice == "Prediksi Harga Minyak (RNN Model)":
         Tes5.RNN_app()
         # Menjalankan aplikasi Downhole dari Downhole1.py
-    elif app_choice == "Analisis Downhole":
+    elif app_choice == "Analisis Downhole P&T (RF)":
         # Menjalankan aplikasi Downhole dari Downhole1.py
         Tes1.downhole_app()
-    elif app_choice == "Lithology Prediction":
+    elif app_choice == "Prediksi Litologi (RF)":
         # Menjalankan aplikasi Downhole dari Downhole1.py
         Tes3.lithology_app()
 
