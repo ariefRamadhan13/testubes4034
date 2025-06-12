@@ -6,3 +6,4 @@ missingno
 openpyxl
 tensorflow
 xlsxwriter
+keras
