@@ -7,7 +7,7 @@ import Tes4
 import Tes5
 from PIL import Image
 
-img = Image.open("Logo_Institut_Teknologi_Bandung.png")
+img = Image.open("Logo_Institut_Teknologi_Bandung (2).png")
 st.image(img,width = 1500)
 
 def main():
